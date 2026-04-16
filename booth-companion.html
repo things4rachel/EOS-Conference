@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EOS Conference Booth Companion</title>
+    <!-- To use: Upload this file to Netlify Drop (netlify.com/drop) or similar service -->
+    <style>
+        :root {
+            --primary: #ffffff;
+            --secondary: #f8fafc;
+            --accent: #4285f4;
+            --text: #2d3748;
+            --text-muted: #718096;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --accent-light: #e8f0fe;
+        }
+
+        [data-theme="dark"] {
+            --primary: #1a202c;
+            --secondary: #2d3748;
+            --accent: #4285f4;
+            --text: #f7fafc;
+            --text-muted: #a0aec0;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --border: #4a5568;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --accent-light: rgba(66, 133, 244, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--accent);
+            padding: 1rem;
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            color: white;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 100%;
+        }
+
+        .header-text {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: white;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .goal-banner {
+            background: var(--success);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--primary);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-width: 80px;
+            color: var(--text-muted);
+        }
+
+        .tab.active {
+            background: var(--accent-light);
+            border-bottom-color: var(--success);
+            color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1rem;
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 1px solid var(--accent);
+            transition: all 0.2s ease;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button:hover {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .button.secondary {
+            background: var(--primary);
+            color: var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        .button.secondary:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .button-grid .button {
+            margin-bottom: 0;
+            min-height: 72px;
+            font-size: 0.9rem;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .question-list {
+            list-style: none;
+        }
+
+        .question-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .question-list li:last-child {
+            border-bottom: none;
+        }
+
+        .green-flag, .red-flag {
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            border-left: 4px solid;
+        }
+
+        .green-flag {
+            background: rgba(56, 161, 105, 0.1);
+            border-color: var(--success);
+            color: var(--text);
+        }
+
+        .red-flag {
+            background: rgba(229, 62, 62, 0.1);
+            border-color: var(--danger);
+            color: var(--text);
+        }
+
+        .icp-grid {
+            display: grid;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .icp-item {
+            background: var(--accent-light);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+        }
+
+        .icp-item strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+
+        .talk-track {
+            background: var(--accent-light);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--success);
+        }
+
+        .talk-track h4 {
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .talk-track p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-style: italic;
+            color: var(--text);
+        }
+
+        .qr-code {
+            text-align: center;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .copy-text {
+            background: var(--accent-light);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            word-break: break-all;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .copy-text:hover {
+            background: var(--secondary);
+            border-color: var(--accent);
+        }
+
+        @media (max-width: 480px) {
+            .tabs {
+                font-size: 0.75rem;
+            }
+            
+            .tab {
+                padding: 0.6rem 0.3rem;
+                min-width: 70px;
+            }
+            
+            .card {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1>EOS Conference Booth Companion</h1>
+                <p>Kansas City • April 22-24, 2026</p>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="goal-banner">
+        🎯 GOAL: 25 ICP-fit calls by end of event (3-4 per person per day)
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="links">Links</div>
+        <div class="tab" data-tab="icp">ICP</div>
+        <div class="tab" data-tab="questions">Questions</div>
+        <div class="tab" data-tab="flags">Signals</div>
+        <div class="tab" data-tab="tracks">Talk Tracks</div>
+    </div>
+
+    <div class="tab-content active" id="links">
+        <div class="card">
+            <h3>🔗 Essential Links</h3>
+            <a href="https://meetings.hubspot.com/darrellwillis/booth-leads" class="button">📅 Book Call (Primary)</a>
+            <a href="https://share.hsforms.com/1ch4nsBAXQ4igQjHKSm1Ong3453" class="button">📝 Lead Capture Form</a>
+            <a href="https://endlesscustomers.com" class="button secondary">📖 Endless Customers Book</a>
+        </div>
+
+        <div class="card">
+            <h3>📱 QR Codes</h3>
+            <div class="button-grid">
+                <div class="button secondary" onclick="showQR('Bob Session Slides', 'Will be provided at event')">
+                    📊<br>Bob's Session<br>Slides QR
+                </div>
+                <div class="button secondary" onclick="showQR('Lead Capture', 'Table tent QR code')">
+                    🎯<br>Table Lead<br>Capture QR
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🎤 Bob's Speaking Sessions</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">
+                Push attendees to Bob's session BEFORE booking calls
+            </p>
+            <div class="copy-text" onclick="copyText(this)">
+                "You should definitely check out our CEO's session on [date/time] - he goes deep on exactly how this system works"
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="icp">
+        <div class="card">
+            <h3>🎯 Ideal Customer Profile</h3>
+            <div class="icp-grid">
+                <div class="icp-item">
+                    <strong>Revenue:</strong>
+                    $3M+ annual revenue
+                </div>
+                <div class="icp-item">
+                    <strong>Team Size:</strong>
+                    10+ employees
+                </div>
+                <div class="icp-item">
+                    <strong>Decision Makers:</strong>
+                    Owner, CEO, President, Visionary, Integrator, Sales/Marketing Leader
+                </div>
+                <div class="icp-item">
+                    <strong>Industries:</strong>
+                    Construction, Home Improvement, Manufacturing, Business Services, Retail, Professional Services
+                </div>
+                <div class="icp-item">
+                    <strong>Mindset:</strong>
+                    Believes in coaching/training, open to doing things differently, research-driven buyers
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>❌ Disqualifiers</h3>
+            <div class="red-flag">Solopreneur or freelancer with no team</div>
+            <div class="red-flag">Very early stage with no sales team</div>
+            <div class="red-flag">Wants "do it for you" agency, not coaching</div>
+            <div class="red-flag">Not in US or Canada</div>
+            <div class="red-flag">Marketing agency, web design, video production (we compete)</div>
+            <div class="red-flag">Happy with current agency, no interest in change</div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="questions">
+        <div class="card">
+            <h3>🗣️ Opening Questions</h3>
+            <ul class="question-list">
+                <li>"What brought you over to our booth? What's catching your eye?"</li>
+                <li>"Do you currently run on EOS? How's that working for you?"</li>
+                <li>"EOS runs your business — what runs your growth?"</li>
+                <li>"Do you have a system in place to run your sales and marketing?"</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>🔍 Qualifying Questions</h3>
+            <ul class="question-list">
+                <li>"What does your sales and marketing look like right now?"</li>
+                <li>"How are your customers finding you today?"</li>
+                <li>"How are people finding you — is it mostly referrals?"</li>
+                <li>"What are you currently spending on marketing?" <span style="color: var(--warning);">💡 Key signal</span></li>
+                <li>"How many employees do you have?" <span style="color: var(--warning);">💡 Required for booking</span></li>
+                <li>"Is sales and marketing aligned, or do they operate in separate worlds?"</li>
+                <li>"Have you started thinking about how AI will affect your sales and marketing?"</li>
+                <li>"Is this something your company is actively trying to solve, or more of a 'someday' thing?"</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>💬 Bob Session Follow-ups</h3>
+            <ul class="question-list">
+                <li>"What resonated with you from Bob's session?"</li>
+                <li>"What are some things in your business that Bob's session would solve?"</li>
+                <li>"If you missed the session, I can get you those resources..."</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tab-content" id="flags">
+        <div class="card">
+            <h3>✅ Green Light Signals - LEAN IN</h3>
+            <div class="green-flag">"We're not getting enough leads" or "leads are inconsistent"</div>
+            <div class="green-flag">"Marketing and sales aren't really working together"</div>
+            <div class="green-flag">"We've been relying on referrals and it's unreliable/not scaling"</div>
+            <div class="green-flag">"We have a marketing person but don't know what's working"</div>
+            <div class="green-flag">"We hired an agency but we're not seeing ROI"</div>
+            <div class="green-flag">"We want to build marketing in-house but don't know where to start"</div>
+            <div class="green-flag">"AI is moving fast and we're not ready for it"</div>
+            <div class="green-flag">"Our traffic is down and we need to show up in AI search results"</div>
+            <div class="green-flag">"We want to be the go-to name in our market"</div>
+        </div>
+
+        <div class="card">
+            <h3>🛑 Red Flag Signals - EXIT GRACEFULLY</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
+                Capture info via lead form, give minibook, direct to endlesscustomers.com
+            </p>
+            <div class="red-flag">Solo/freelancer with no employees</div>
+            <div class="red-flag">Very early stage, no sales team yet</div>
+            <div class="red-flag">Want agency to do everything, not interested in coaching</div>
+            <div class="red-flag">Love their current agency, seeing great results</div>
+            <div class="red-flag">Competing industry (marketing/web/video agencies)</div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tracks">
+        <div class="card">
+            <h3>🎯 Key Talk Tracks</h3>
+            
+            <div class="talk-track">
+                <h4>Opening Hook</h4>
+                <p>"Hey, I saw you looking at our booth - what's catching your eye about the Endless Customers system?"</p>
+            </div>
+
+            <div class="talk-track">
+                <h4>EOS Bridge</h4>
+                <p>"EOS runs your business beautifully - what runs your growth? Most EOS companies don't have a system for consistent lead generation."</p>
+            </div>
+
+            <div class="talk-track">
+                <h4>Agency Differentiator</h4>
+                <p>"We're the opposite of an agency - we teach you to fish instead of fishing for you. The goal is getting marketing inside your company, not being reliant on an agency forever."</p>
+            </div>
+
+            <div class="talk-track">
+                <h4>Hard Close</h4>
+                <p>"Why don't we just book it right now? We can always move it if something comes up. I know what happens - you'll get inundated with vendors and if this is important to you, I want to make sure you have the conversation you need."</p>
+            </div>
+
+            <div class="talk-track">
+                <h4>Call Setup</h4>
+                <p>"You'll receive a confirmation email. Tom will reach out before your meeting to prep you. This call is about exploring where you're at, identifying your goals and challenges - whether you work with us or not, you'll have clarity by the end."</p>
+            </div>
+
+            <div class="talk-track">
+                <h4>Lead Capture Only</h4>
+                <p>"Thanks for connecting! You'll receive more information on Endless Customers. If anything resonates, just reply to the emails and we'd love to hop on a call."</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>⚡ Quick Reminders</h3>
+            <ul class="question-list">
+                <li>10 minutes MAX per conversation</li>
+                <li>Stay curious - questions about THEM, not us</li>
+                <li>Force the booking in the moment</li>
+                <li>Wait for email confirmation before they leave</li>
+                <li>Always be standing at edge of booth</li>
+                <li>We are "IMPACT - Endless Customers coaching"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('booth-companion-theme', newTheme);
+            
+            // Update icon
+            const themeIcon = document.querySelector('.theme-icon');
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Initialize theme on load
+        function initTheme() {
+            const savedTheme = localStorage.getItem('booth-companion-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const themeIcon = document.querySelector('.theme-icon');
+            themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Initialize theme when page loads
+        document.addEventListener('DOMContentLoaded', initTheme);
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Copy text functionality
+        function copyText(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const original = element.style.background;
+                element.style.background = 'var(--success)';
+                element.style.color = 'var(--primary)';
+                setTimeout(() => {
+                    element.style.background = original;
+                    element.style.color = 'var(--text)';
+                }, 1000);
+            });
+        }
+
+        // QR code placeholder (would integrate with actual QR generation)
+        function showQR(title, description) {
+            alert(`${title} QR Code\n\n${description}\n\n(QR codes will be provided at event)`);
+        }
+
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
