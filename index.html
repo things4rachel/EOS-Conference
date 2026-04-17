@@ -380,29 +380,35 @@
         <div class="card">
             <h3>🔗 Essential Links</h3>
             <a href="https://meetings.hubspot.com/darrellwillis/booth-leads" target="_blank" class="button">📅 Book Call (Primary)</a>
-            <a href="https://share.hsforms.com/1ch4nsBAXQ4igQjHKSm1Ong3453" target="_blank" class="button">📝 Lead Capture Form</a>
+            <a href="https://www.impactplus.com/eos26-learn-more" target="_blank" class="button">📝 Lead Capture Form</a>
             <a href="https://endlesscustomers.com" target="_blank" class="button secondary">📖 Endless Customers Book</a>
+            <a href="https://www.impactplus.com/endless-customers-podcast/eos-and-endless-customers" target="_blank" class="button secondary">🎧 EOS + EC Podcast</a>
         </div>
 
         <div class="card">
             <h3>📱 QR Codes</h3>
             <div class="button-grid">
-                <div class="button secondary" onclick="showQR('Bob Session Slides', 'Will be provided at event')">
+                <div class="button secondary" onclick="showQR('Bob Session Slides', 'For attendees who attended Bob\'s session')">
                     📊<br>Bob's Session<br>Slides QR
                 </div>
-                <div class="button secondary" onclick="showQR('Lead Capture', 'Table tent QR code')">
-                    🎯<br>Table Lead<br>Capture QR
+                <div class="button secondary" onclick="showQR('Stay Connected', 'For those who want to stay connected with Endless Customers')">
+                    🎯<br>Stay Connected<br>QR
                 </div>
             </div>
         </div>
 
         <div class="card">
             <h3>🎤 Bob's Speaking Sessions</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">
+            <h4>"Lead Your Market and Win More Customers in the Age of AI"</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                <strong>April 22:</strong> 4-5pm<br>
+                <strong>April 23:</strong> 2-3pm
+            </p>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
                 Push attendees to Bob's session BEFORE booking calls
             </p>
             <div class="copy-text" onclick="copyText(this)">
-                "You should definitely check out our CEO's session on [date/time] - he goes deep on exactly how this system works"
+                "You should definitely check out our CEO's session - he's speaking both days about leading your market with AI. Perfect timing for what we've been discussing!"
             </div>
         </div>
     </div>
@@ -449,6 +455,9 @@
         <div class="card">
             <h3>🗣️ Opening Questions</h3>
             <ul class="question-list">
+                <li>"What does your company do?"</li>
+                <li>"What's your role there?"</li>
+                <li>"What are you hoping to get out of the event?"</li>
                 <li>"What brought you over to our booth? What's catching your eye?"</li>
                 <li>"Do you currently run on EOS? How's that working for you?"</li>
                 <li>"EOS runs your business — what runs your growth?"</li>
@@ -609,9 +618,60 @@
             });
         }
 
-        // QR code placeholder (would integrate with actual QR generation)
+        // QR code display functionality with actual images
         function showQR(title, description) {
-            alert(`${title} QR Code\n\n${description}\n\n(QR codes will be provided at event)`);
+            const qrCodeImages = {
+                "Bob Session Slides": "https://things4rachel.github.io/EOS-Conference/EOS-Bobs-session.png",
+                "Stay Connected": "https://things4rachel.github.io/EOS-Conference/EOS-subscribe-for-more.png"
+            };
+            const qrModal = document.createElement('div');
+            qrModal.id = 'qr-modal';
+            qrModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+            `;
+            
+            qrModal.innerHTML = `
+                <div style="text-align: center; background: white; padding: 2rem; border-radius: 12px; max-width: 90%; max-height: 90%; overflow: auto;">
+                    <h3 style="color: #4285f4; margin-bottom: 1rem; font-size: 1.2rem;">${title}</h3>
+                    <div style="margin: 1rem 0;">
+                        <img src="${qrCodeImages[title]}" alt="${title} QR Code" style="max-width: 300px; max-height: 300px; border: 1px solid #ddd; border-radius: 8px; display: block; margin: 0 auto;" 
+                             onload="console.log('QR image loaded successfully:', this.src)"
+                             onerror="console.error('QR image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                        <div style="width: 300px; height: 200px; margin: 0 auto; background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; display: none; align-items: center; justify-content: center; font-size: 0.9rem; color: #666; text-align: center; padding: 1rem;">
+                            ⚠️ QR Image not loading<br>
+                            <small style="margin-top: 0.5rem; display: block; font-size: 0.8rem;">Expected: ${qrCodeImages[title]}</small>
+                        </div>
+                    </div>
+                    <p style="color: #666; margin: 1rem 0; font-size: 0.9rem;">${description}</p>
+                    <button onclick="closeQR()" style="padding: 0.75rem 1.5rem; background: #4285f4; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s ease;">Close</button>
+                </div>
+            `;
+            
+            // Close modal when clicking outside
+            qrModal.addEventListener('click', (e) => {
+                if (e.target === qrModal) {
+                    closeQR();
+                }
+            });
+            
+            document.body.appendChild(qrModal);
+        }
+
+        function closeQR() {
+            const modal = document.getElementById('qr-modal');
+            if (modal) {
+                modal.remove();
+            }
         }
 
         // Prevent zoom on double tap
