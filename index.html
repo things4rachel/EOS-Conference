@@ -335,6 +335,185 @@
             border-color: var(--accent);
         }
 
+        /* Schedule tab styles */
+        .schedule-day {
+            background: var(--accent);
+            color: white;
+            padding: 0.6rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .schedule-list {
+            list-style: none;
+        }
+
+        .schedule-list li {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.88rem;
+            color: var(--text);
+            align-items: flex-start;
+        }
+
+        .schedule-list li:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-time {
+            flex-shrink: 0;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 100px;
+            font-size: 0.82rem;
+        }
+
+        .schedule-event {
+            flex: 1;
+            color: var(--text);
+        }
+
+        .schedule-note {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--accent-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .contact-link:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .contact-link:hover .contact-role,
+        .contact-link:hover .contact-phone {
+            color: white;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .contact-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .contact-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .contact-phone {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        /* Map tab styles */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            min-height: 400px;
+            max-height: 600px;
+            overflow: hidden;
+            background: #ffffff;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            touch-action: none;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-container.is-panning {
+            cursor: grabbing;
+        }
+
+        .map-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            transform-origin: center center;
+            transform: translate(0px, 0px) scale(1);
+            transition: transform 0.15s ease-out;
+            pointer-events: none;
+            will-change: transform;
+            -webkit-user-drag: none;
+        }
+
+        .map-image.is-interacting {
+            transition: none;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            justify-content: center;
+        }
+
+        .map-btn {
+            flex: 1;
+            max-width: 80px;
+            padding: 0.6rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+
+        .map-btn:hover {
+            background: var(--success);
+            transform: translateY(-1px);
+        }
+
+        .map-btn:active {
+            transform: translateY(0);
+        }
+
+        .map-btn-reset {
+            font-size: 0.85rem;
+            max-width: 100px;
+        }
+
         @media (max-width: 480px) {
             .tabs {
                 font-size: 0.75rem;
@@ -347,6 +526,15 @@
             
             .card {
                 padding: 0.75rem;
+            }
+
+            .schedule-time {
+                min-width: 85px;
+                font-size: 0.78rem;
+            }
+
+            .schedule-list li {
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -370,6 +558,8 @@
 
     <div class="tabs">
         <div class="tab active" data-tab="links">Links</div>
+        <div class="tab" data-tab="schedule">Schedule</div>
+        <div class="tab" data-tab="map">Map</div>
         <div class="tab" data-tab="icp">ICP</div>
         <div class="tab" data-tab="questions">Questions</div>
         <div class="tab" data-tab="flags">Signals</div>
@@ -410,6 +600,101 @@
             <div class="copy-text" onclick="copyText(this)">
                 "You should definitely check out our CEO's session - he's speaking both days about leading your market with AI. Perfect timing for what we've been discussing!"
             </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="schedule">
+        <div class="card">
+            <div class="schedule-day">Wednesday, April 22</div>
+            <ul class="schedule-list">
+                <li><span class="schedule-time">9:00 AM</span><span class="schedule-event">Registration opens | Booths open</span></li>
+                <li><span class="schedule-time">1:00–5:00 PM</span><span class="schedule-event">Sponsor sessions</span></li>
+                <li><span class="schedule-time">5:00–6:00 PM</span><span class="schedule-event">Welcome reception (sponsored by Ninety)</span></li>
+                <li><span class="schedule-time">6:00 PM</span><span class="schedule-event">Registration closes | Booths close</span></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="schedule-day">Thursday, April 23</div>
+            <ul class="schedule-list">
+                <li><span class="schedule-time">6:30 AM–6:00 PM</span><span class="schedule-event">Registration open</span></li>
+                <li><span class="schedule-time">6:30–8:00 AM</span><span class="schedule-event">Breakfast*</span></li>
+                <li><span class="schedule-time">6:30 AM–5:30 PM</span><span class="schedule-event">Booths open</span></li>
+                <li><span class="schedule-time">8:00–9:30 AM</span><span class="schedule-event">Main stage keynote</span></li>
+                <li><span class="schedule-time">10:00–11:00 AM</span><span class="schedule-event">Breakout session</span></li>
+                <li><span class="schedule-time">11:00–12:30 PM</span><span class="schedule-event">Networking lunch*</span></li>
+                <li><span class="schedule-time">12:30–1:30 PM</span><span class="schedule-event">Breakout session</span></li>
+                <li><span class="schedule-time">2:00–3:00 PM</span><span class="schedule-event">Breakout session</span></li>
+                <li><span class="schedule-time">3:30–5:00 PM</span><span class="schedule-event">Main stage keynote</span></li>
+                <li><span class="schedule-time">5:00–5:30 PM</span><span class="schedule-event">Free time</span></li>
+                <li><span class="schedule-time">5:30–8:30 PM</span><span class="schedule-event">Evening reception</span></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="schedule-day">Friday, April 24</div>
+            <ul class="schedule-list">
+                <li><span class="schedule-time">6:30–8:00 AM</span><span class="schedule-event">Breakfast*</span></li>
+                <li><span class="schedule-time">6:30 AM</span><span class="schedule-event">Booths open</span></li>
+                <li><span class="schedule-time">8:00–9:00 AM</span><span class="schedule-event">Main stage keynote</span></li>
+                <li><span class="schedule-time">9:30–10:45 AM</span><span class="schedule-event">Breakout session</span></li>
+                <li><span class="schedule-time">11:00–12:15 PM</span><span class="schedule-event">Main stage keynote</span></li>
+                <li><span class="schedule-time">11:00 AM</span><span class="schedule-event">Booth teardown begins</span></li>
+                <li><span class="schedule-time">5:00 PM</span><span class="schedule-event">Booth teardown ends</span></li>
+            </ul>
+            <div class="schedule-note">
+                Booth teardown can begin once the Friday keynote starts at 11:00 AM. Breakdown must be complete by 5:00 PM.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📞 Questions or Concerns?</h3>
+            <a href="tel:+17249537984" class="contact-link">
+                <div class="contact-info">
+                    <span class="contact-name">Sara Bagiatis</span>
+                    <span class="contact-role">On-Site Sponsor Logistics</span>
+                </div>
+                <span class="contact-phone">724-953-7984</span>
+            </a>
+            <a href="tel:+19144733711" class="contact-link">
+                <div class="contact-info">
+                    <span class="contact-name">Lauren Shaver</span>
+                    <span class="contact-role">Head of Sponsorships</span>
+                </div>
+                <span class="contact-phone">914-473-3711</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="tab-content" id="map">
+        <div class="card">
+            <h3>📍 We're at Booth 17</h3>
+            <p style="font-size: 0.9rem; color: var(--text); margin-bottom: 0.5rem;">
+                <strong style="color: var(--accent);">Endless Customers (IMPACT)</strong> — in the main row between Booth 16 (Step by Step Exit) and Booth 18 (The Sales Collective).
+            </p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">
+                Pinch to zoom • drag to pan • double-tap to reset
+            </p>
+        </div>
+
+        <div class="card" style="padding: 0.5rem;">
+            <div class="map-container" id="mapContainer">
+                <img src="https://things4rachel.github.io/EOS-Conference/event-map.jpg" id="mapImage" class="map-image" alt="EOS Conference event map with booth assignments">
+            </div>
+            <div class="map-controls">
+                <button class="map-btn" onclick="zoomMap(0.3)" aria-label="Zoom in">＋</button>
+                <button class="map-btn" onclick="zoomMap(-0.3)" aria-label="Zoom out">−</button>
+                <button class="map-btn map-btn-reset" onclick="resetMap()" aria-label="Reset view">Reset</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🏢 Booth Neighbors</h3>
+            <ul class="question-list">
+                <li><strong style="color: var(--accent);">Booth 16:</strong> Step by Step Exit</li>
+                <li><strong style="color: var(--accent);">Booth 18:</strong> The Sales Collective</li>
+                <li><strong style="color: var(--accent);">Booth 4 (across):</strong> Ninety — welcome reception sponsor</li>
+            </ul>
         </div>
     </div>
 
@@ -683,6 +968,163 @@
             }
             lastTouchEnd = now;
         }, false);
+
+        // Map pan/zoom
+        (function initMap() {
+            const container = document.getElementById('mapContainer');
+            const img = document.getElementById('mapImage');
+            if (!container || !img) return;
+
+            const MIN_SCALE = 1;
+            const MAX_SCALE = 5;
+
+            let scale = 1;
+            let posX = 0, posY = 0;
+
+            let initialPinchDist = 0;
+            let initialScale = 1;
+            let panStartX = 0, panStartY = 0;
+            let isPanning = false;
+            let isPinching = false;
+
+            function clamp(v, min, max) {
+                return Math.max(min, Math.min(max, v));
+            }
+
+            function constrainPan() {
+                // Keep image from drifting off-screen when zoomed
+                const rect = container.getBoundingClientRect();
+                const imgW = img.offsetWidth * scale;
+                const imgH = img.offsetHeight * scale;
+                const maxX = Math.max(0, (imgW - rect.width) / 2);
+                const maxY = Math.max(0, (imgH - rect.height) / 2);
+                posX = clamp(posX, -maxX, maxX);
+                posY = clamp(posY, -maxY, maxY);
+            }
+
+            function apply() {
+                img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+            }
+
+            function reset() {
+                scale = 1;
+                posX = 0;
+                posY = 0;
+                img.classList.remove('is-interacting');
+                apply();
+            }
+
+            window.zoomMap = function(delta) {
+                img.classList.remove('is-interacting');
+                scale = clamp(scale + delta, MIN_SCALE, MAX_SCALE);
+                if (scale <= MIN_SCALE) { posX = 0; posY = 0; }
+                constrainPan();
+                apply();
+            };
+
+            window.resetMap = reset;
+
+            function getDistance(t1, t2) {
+                return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+            }
+
+            container.addEventListener('touchstart', (e) => {
+                img.classList.add('is-interacting');
+                if (e.touches.length === 2) {
+                    isPinching = true;
+                    isPanning = false;
+                    initialPinchDist = getDistance(e.touches[0], e.touches[1]);
+                    initialScale = scale;
+                } else if (e.touches.length === 1) {
+                    isPanning = true;
+                    panStartX = e.touches[0].clientX - posX;
+                    panStartY = e.touches[0].clientY - posY;
+                }
+            }, { passive: true });
+
+            container.addEventListener('touchmove', (e) => {
+                if (isPinching && e.touches.length === 2) {
+                    e.preventDefault();
+                    const dist = getDistance(e.touches[0], e.touches[1]);
+                    scale = clamp(initialScale * (dist / initialPinchDist), MIN_SCALE, MAX_SCALE);
+                    if (scale <= MIN_SCALE) { posX = 0; posY = 0; }
+                    constrainPan();
+                    apply();
+                } else if (isPanning && e.touches.length === 1 && scale > MIN_SCALE) {
+                    e.preventDefault();
+                    posX = e.touches[0].clientX - panStartX;
+                    posY = e.touches[0].clientY - panStartY;
+                    constrainPan();
+                    apply();
+                }
+            }, { passive: false });
+
+            container.addEventListener('touchend', (e) => {
+                if (e.touches.length === 0) {
+                    isPanning = false;
+                    isPinching = false;
+                } else if (e.touches.length === 1) {
+                    isPinching = false;
+                    isPanning = true;
+                    panStartX = e.touches[0].clientX - posX;
+                    panStartY = e.touches[0].clientY - posY;
+                }
+            });
+
+            // Double-tap on map to reset
+            let lastMapTap = 0;
+            container.addEventListener('touchend', (e) => {
+                if (e.touches.length !== 0) return;
+                const now = Date.now();
+                if (now - lastMapTap < 300 && now - lastMapTap > 0) {
+                    reset();
+                    lastMapTap = 0;
+                } else {
+                    lastMapTap = now;
+                }
+            });
+
+            // Mouse wheel zoom for desktop
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                img.classList.add('is-interacting');
+                const delta = e.deltaY > 0 ? -0.15 : 0.15;
+                scale = clamp(scale + delta, MIN_SCALE, MAX_SCALE);
+                if (scale <= MIN_SCALE) { posX = 0; posY = 0; }
+                constrainPan();
+                apply();
+            }, { passive: false });
+
+            // Mouse drag for desktop
+            let mouseDragging = false;
+            container.addEventListener('mousedown', (e) => {
+                if (scale <= MIN_SCALE) return;
+                mouseDragging = true;
+                container.classList.add('is-panning');
+                img.classList.add('is-interacting');
+                panStartX = e.clientX - posX;
+                panStartY = e.clientY - posY;
+                e.preventDefault();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!mouseDragging) return;
+                posX = e.clientX - panStartX;
+                posY = e.clientY - panStartY;
+                constrainPan();
+                apply();
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (mouseDragging) {
+                    mouseDragging = false;
+                    container.classList.remove('is-panning');
+                }
+            });
+
+            // Double-click on desktop to reset
+            container.addEventListener('dblclick', () => reset());
+        })();
     </script>
 </body>
 </html>
